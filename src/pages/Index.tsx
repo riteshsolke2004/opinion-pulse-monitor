@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import Features from '../components/Features';
 import SentimentAnalyzer from '../components/SentimentAnalyzer';
 import Dashboard from '../components/Dashboard';
+import Footer from '../components/Footer';
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <SentimentAnalyzer />
       <Features />
       <Dashboard />
+      <Footer />
     </div>
   );
 };

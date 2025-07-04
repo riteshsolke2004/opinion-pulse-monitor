@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, TrendingDown, Users, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 const DashboardPage = () => {
   // Mock data for demonstrations
@@ -237,6 +237,8 @@ const DashboardPage = () => {
           </Card>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
