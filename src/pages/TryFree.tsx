@@ -1,64 +1,46 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, MessageSquare, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { MessageSquare, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import axios from 'axios';
 
 const TryFreePage = () => {
   const [text, setText] = useState('');
-  const [analysis, setAnalysis] = useState<null | {
-    sentiment: string;
-    score: number;
-    confidence: number;
-    keywords: string[];
-  }>(null);
+  const [analysis, setAnalysis] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const analyzeSentiment = async () => {
     if (!text.trim()) return;
-
     setIsAnalyzing(true);
-    
-    // Simulate API call with mock analysis
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Mock sentiment analysis (in real app, this would call your ML API)
-    const words = text.toLowerCase().split(' ');
-    const positiveWords = ['good', 'great', 'excellent', 'amazing', 'love', 'perfect', 'wonderful', 'fantastic'];
-    const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'horrible', 'worst', 'disappointed', 'poor'];
-    
-    const positiveCount = words.filter(word => positiveWords.includes(word)).length;
-    const negativeCount = words.filter(word => negativeWords.includes(word)).length;
-    
-    let sentiment = 'Neutral';
-    let score = 50;
-    
-    if (positiveCount > negativeCount) {
-      sentiment = 'Positive';
-      score = Math.min(95, 60 + (positiveCount * 10));
-    } else if (negativeCount > positiveCount) {
-      sentiment = 'Negative';
-      score = Math.max(5, 40 - (negativeCount * 10));
+    setAnalysis(null);
+
+    try {
+      // Step 1: Analyze the sentiment using FastAPI
+      const res = await axios.post('http://127.0.0.1:8000/analyze', { text });
+      const result = res.data;
+      setAnalysis(result);
+
+      // Step 2: Save the result in MongoDB
+      await axios.post("http://127.0.0.1:8000/api/submit-review", {
+        text: text,
+        sentiment: result.sentiment,
+        score: result.score,
+        confidence: result.confidence
+      });
+    } catch (error) {
+      console.error('Error connecting to FastAPI:', error);
+      alert("Failed to analyze or save. Please check if your backend is running.");
     }
-    
-    const keywords = [...new Set([...words.filter(word => positiveWords.includes(word) || negativeWords.includes(word))])];
-    
-    setAnalysis({
-      sentiment,
-      score,
-      confidence: Math.random() * 20 + 80, // 80-100%
-      keywords: keywords.slice(0, 5)
-    });
-    
+
     setIsAnalyzing(false);
   };
 
-  const getSentimentIcon = (sentiment: string) => {
+  const getSentimentIcon = (sentiment) => {
     switch (sentiment) {
       case 'Positive':
         return <TrendingUp className="w-5 h-5 text-green-500" />;
@@ -69,7 +51,7 @@ const TryFreePage = () => {
     }
   };
 
-  const getSentimentColor = (sentiment: string) => {
+  const getSentimentColor = (sentiment) => {
     switch (sentiment) {
       case 'Positive':
         return 'bg-green-500';
@@ -83,7 +65,7 @@ const TryFreePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Navbar />
-      
+
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -113,7 +95,7 @@ const TryFreePage = () => {
               <Textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="Example: This product is amazing! The quality exceeded my expectations and the customer service was fantastic. I would definitely recommend it to others."
+                placeholder="Example: This product is amazing! The quality exceeded my expectations and the customer service was fantastic."
                 className="min-h-32 resize-none"
               />
               <div className="flex items-center justify-between">
@@ -142,7 +124,6 @@ const TryFreePage = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  {/* Sentiment */}
                   <div className="text-center p-6 bg-gray-50 rounded-lg">
                     <div className="flex items-center justify-center mb-3">
                       <Badge className={`${getSentimentColor(analysis.sentiment)} text-white`}>
@@ -152,7 +133,6 @@ const TryFreePage = () => {
                     <p className="text-sm text-gray-600">Sentiment</p>
                   </div>
 
-                  {/* Score */}
                   <div className="text-center p-6 bg-gray-50 rounded-lg">
                     <div className="text-3xl font-bold text-blue-600 mb-2">
                       {analysis.score}%
@@ -160,7 +140,6 @@ const TryFreePage = () => {
                     <p className="text-sm text-gray-600">Sentiment Score</p>
                   </div>
 
-                  {/* Confidence */}
                   <div className="text-center p-6 bg-gray-50 rounded-lg">
                     <div className="text-3xl font-bold text-green-600 mb-2">
                       {analysis.confidence.toFixed(1)}%
@@ -169,8 +148,7 @@ const TryFreePage = () => {
                   </div>
                 </div>
 
-                {/* Keywords */}
-                {analysis.keywords.length > 0 && (
+                {analysis.keywords?.length > 0 && (
                   <div>
                     <h4 className="font-semibold mb-3">Key Sentiment Words Detected:</h4>
                     <div className="flex flex-wrap gap-2">
@@ -186,7 +164,7 @@ const TryFreePage = () => {
             </Card>
           )}
 
-          {/* CTA Section */}
+          {/* CTA */}
           <div className="text-center mt-12 p-8 bg-white/60 backdrop-blur-sm rounded-xl border border-white/20">
             <h3 className="text-2xl font-bold mb-4">Ready for More Advanced Analysis?</h3>
             <p className="text-gray-600 mb-6">
