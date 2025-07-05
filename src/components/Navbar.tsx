@@ -50,6 +50,15 @@ const Navbar = () => {
             ))}
           </div>
 
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link to="/try-free">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Try Free Analysis
+              </Button>
+            </Link>
+          </div>
+
           {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2"
@@ -75,6 +84,11 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
+              <Link to="/try-free" onClick={() => setIsMenuOpen(false)}>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
+                  Try Free Analysis
+                </Button>
+              </Link>
             </div>
           </div>
         )}
