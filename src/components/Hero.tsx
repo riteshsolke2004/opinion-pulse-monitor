@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { BarChart, TrendingUp, MessageSquare } from 'lucide-react';
@@ -34,6 +35,11 @@ const Hero = () => {
             <Link to="/dashboard">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
                 View Dashboard
+              </Button>
+            </Link>
+            <Link to="/try-free">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                Try Free Analysis
               </Button>
             </Link>
           </div>
