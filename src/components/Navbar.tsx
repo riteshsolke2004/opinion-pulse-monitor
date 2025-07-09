@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,20 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-3">
+              <Link to="/login">
+                <Button variant="ghost" className="text-gray-600 hover:text-blue-600">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -74,6 +89,20 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
+              
+              {/* Mobile Auth Buttons */}
+              <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
+                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full text-gray-600 hover:text-blue-600">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    Sign Up
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         )}
