@@ -51,7 +51,7 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Auth Buttons or Profile Button */}
+            {/* Conditional Auth/Profile Buttons */}
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
                 <Link to="/profile">
@@ -63,7 +63,7 @@ const Navbar = () => {
               ) : (
                 <>
                   <Link to="/login">
-                    <Button variant="ghost" className="bg-green-600 hover:bg-green-500 text-white">
+                    <Button variant="ghost" className="text-gray-600 hover:text-blue-600">
                       Login
                     </Button>
                   </Link>
@@ -103,7 +103,7 @@ const Navbar = () => {
                 </Link>
               ))}
               
-              {/* Mobile Auth Buttons or Profile Button */}
+              {/* Mobile Conditional Auth/Profile Buttons */}
               <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
                 {isAuthenticated ? (
                   <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
