@@ -15,22 +15,6 @@ import Autoplay from "embla-carousel-autoplay"
 const Hero = () => {
   const carouselImages = [
     {
-      src: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-      alt: "Business analytics dashboard"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", 
-      alt: "Data visualization on laptop"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-      alt: "Professional working with analytics"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-      alt: "Data screens and analytics"
-    },
-    {
       src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
       alt: "Data charts and graphs"
     },
@@ -45,7 +29,19 @@ const Hero = () => {
     {
       src: "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
       alt: "Customer feedback analysis"
-    }
+    },{
+      src: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", 
+      alt: "Data visualization on laptop"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      alt: "Professional working with analytics"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      alt: "Data screens and analytics"
+    },
+    
   ];
 
   const plugin = React.useRef(

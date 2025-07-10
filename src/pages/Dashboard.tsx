@@ -1,15 +1,38 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useEffect, useState } from 'react';
+import {
+  Card, CardContent, CardDescription, CardHeader, CardTitle
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, TrendingDown, Users, MessageSquare, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MessageSquare, TrendingUp, Users } from 'lucide-react';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-const DashboardPage = () => {
-  // Mock data for demonstrations
+interface Review {
+  id: string;
+  text: string;
+  sentiment: 'Positive' | 'Neutral' | 'Negative';
+  score: number;
+}
+
+const DashboardPage: React.FC = () => {
+  const [recentReviews, setRecentReviews] = useState<Review[]>([]);
+
+  // Fetch reviews from backend
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/get-reviews');
+        const data = await res.json();
+        setRecentReviews(data);
+      } catch (error) {
+        console.error('Failed to fetch reviews:', error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   const sentimentTrend = [
     { month: 'Jan', positive: 65, negative: 20, neutral: 15 },
     { month: 'Feb', positive: 72, negative: 18, neutral: 10 },
@@ -35,21 +58,12 @@ const DashboardPage = () => {
     { name: 'Negative', value: 8, color: '#ef4444' }
   ];
 
-  const recentReviews = [
-    { text: "Amazing product! Exceeded all my expectations.", sentiment: "Positive", score: 92 },
-    { text: "Good quality but shipping was slow.", sentiment: "Neutral", score: 65 },
-    { text: "The best purchase I've made this year!", sentiment: "Positive", score: 95 },
-    { text: "Product broke after one week of use.", sentiment: "Negative", score: 15 },
-    { text: "Decent product for the price point.", sentiment: "Neutral", score: 68 }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Navbar />
-      
-      {/* Dashboard Content */}
+
       <div className="container mx-auto px-6 py-8">
-        {/* Key Metrics */}
+        {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 shadow-lg">
             <CardContent className="p-6">
@@ -112,7 +126,7 @@ const DashboardPage = () => {
           </Card>
         </div>
 
-        {/* Charts Section */}
+        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader>
@@ -153,7 +167,7 @@ const DashboardPage = () => {
           </Card>
         </div>
 
-        {/* Bottom Section */}
+        {/* Pie Chart + Real Reviews */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader>
@@ -197,12 +211,12 @@ const DashboardPage = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentReviews.map((review, index) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                {recentReviews.map((review) => (
+                  <div key={review.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <div className="flex items-start justify-between mb-2">
                       <p className="text-gray-800 flex-1 mr-4">{review.text}</p>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <Badge 
+                        <Badge
                           variant={review.sentiment === 'Positive' ? 'default' : review.sentiment === 'Negative' ? 'destructive' : 'secondary'}
                           className={review.sentiment === 'Positive' ? 'bg-green-500' : ''}
                         >
@@ -218,7 +232,7 @@ const DashboardPage = () => {
           </Card>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
