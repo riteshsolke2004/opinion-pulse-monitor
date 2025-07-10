@@ -9,38 +9,11 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:8000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert('Login successful!');
-        // You can store token or user data in localStorage/sessionStorage
-        // localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/dashboard'); // Change to your route
-      } else {
-        alert(data.detail || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    // TODO: Implement login logic
+    console.log('Login attempt:', { email, password });
   };
 
   return (
