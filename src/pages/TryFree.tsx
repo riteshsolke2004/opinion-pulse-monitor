@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { MessageSquare, TrendingUp, TrendingDown, Minus, Upload, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -13,6 +14,21 @@ const TryFreePage = () => {
   const [text, setText] = useState('');
   const [analysis, setAnalysis] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/plain') {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setText(e.target.result);
+        setUploadedFile(file);
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Please upload a text file (.txt)');
+    }
+  };
 
   const analyzeSentiment = async () => {
     if (!text.trim()) return;
@@ -79,7 +95,7 @@ const TryFreePage = () => {
               </h1>
             </div>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Test our AI-powered sentiment analysis with your own text. Enter any customer review, feedback, or comment below.
+              Test our AI-powered sentiment analysis with your own text. Enter any customer review, feedback, or comment below, or upload a text file.
             </p>
           </div>
 
@@ -88,10 +104,41 @@ const TryFreePage = () => {
             <CardHeader>
               <CardTitle>Enter Text for Analysis</CardTitle>
               <CardDescription>
-                Paste any customer review, feedback, or text you'd like to analyze
+                Paste any customer review, feedback, or text you'd like to analyze, or upload a text file
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* File Upload Section */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                <input
+                  type="file"
+                  accept=".txt"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="file-upload"
+                />
+                <label htmlFor="file-upload" className="cursor-pointer">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="p-3 bg-blue-100 rounded-full">
+                      <Upload className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-medium text-gray-700">Upload a text file</p>
+                      <p className="text-sm text-gray-500">Click to browse or drag and drop (.txt files only)</p>
+                    </div>
+                  </div>
+                </label>
+                {uploadedFile && (
+                  <div className="mt-4 flex items-center justify-center gap-2 text-green-600">
+                    <FileText className="w-4 h-4" />
+                    <span className="text-sm font-medium">{uploadedFile.name} uploaded</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="text-center text-gray-500 font-medium">OR</div>
+
+              {/* Text Input */}
               <Textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
