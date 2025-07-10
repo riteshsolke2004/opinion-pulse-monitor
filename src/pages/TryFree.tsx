@@ -21,8 +21,11 @@ const TryFreePage = () => {
     if (file && file.type === 'text/plain') {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setText(e.target.result);
-        setUploadedFile(file);
+        const result = e.target.result;
+        if (typeof result === 'string') {
+          setText(result);
+          setUploadedFile(file);
+        }
       };
       reader.readAsText(file);
     } else {
