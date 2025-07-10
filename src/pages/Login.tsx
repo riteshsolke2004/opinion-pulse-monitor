@@ -6,14 +6,46 @@ import { Label } from '@/components/ui/label';
 import { MessageSquare, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  // Form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login attempt:', { email, password });
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Login failed');
+      }
+
+      const data = await response.json();
+      console.log('Login success:', data);
+
+      // Optional: store user in localStorage or state
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Redirect to user profile or dashboard
+      navigate('/profile'); // Change as needed
+    } catch (error: any) {
+      alert(error.message || 'An error occurred during login.');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
