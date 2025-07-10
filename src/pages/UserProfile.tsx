@@ -1,16 +1,20 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MessageSquare, User, Mail, Phone, MapPin, Edit, Save, X } from 'lucide-react';
+import { MessageSquare, User, Mail, Phone, MapPin, Edit, Save, X, LogOut } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { useAuth } from '@/contexts/AuthContext';
 
 const UserProfile = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    name: user?.name || 'John Doe',
+    email: user?.email || 'john.doe@example.com',
     phone: '+1 (555) 123-4567',
     location: 'New York, NY',
     joinDate: 'January 2024'
@@ -33,6 +37,11 @@ const UserProfile = () => {
   const handleCancel = () => {
     setIsEditing(false);
     setEditInfo(userInfo);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -161,6 +170,14 @@ const UserProfile = () => {
               <div className="space-y-3">
                 <Button variant="outline" className="w-full justify-start">
                   Change Password
+                </Button>
+                <Button 
+                  onClick={handleLogout}
+                  variant="outline" 
+                  className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
                 </Button>
                 <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700">
                   Delete Account

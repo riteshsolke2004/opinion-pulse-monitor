@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, Menu, X } from 'lucide-react';
+import { MessageSquare, Menu, X, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -49,18 +51,29 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Auth Buttons */}
+            {/* Auth Buttons or Profile Button */}
             <div className="flex items-center gap-3">
-              <Link to="/login">
-                <Button variant="ghost" className="bg-green-600 hover:bg-green-500 text-white">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                  Sign Up
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/profile">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="ghost" className="bg-green-600 hover:bg-green-500 text-white">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -90,18 +103,29 @@ const Navbar = () => {
                 </Link>
               ))}
               
-              {/* Mobile Auth Buttons */}
+              {/* Mobile Auth Buttons or Profile Button */}
               <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full text-gray-600 hover:text-blue-600">
-                    Login
-                  </Button>
-                </Link>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                    Sign Up
-                  </Button>
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/profile" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                      <User className="w-4 h-4 mr-2" />
+                      Profile
+                    </Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full text-gray-600 hover:text-blue-600">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

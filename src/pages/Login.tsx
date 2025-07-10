@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MessageSquare, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   // Form state
   const [email, setEmail] = useState('');
@@ -35,11 +37,14 @@ const Login = () => {
       const data = await response.json();
       console.log('Login success:', data);
 
-      // Optional: store user in localStorage or state
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Use auth context to set user state
+      login({
+        email: email,
+        name: data.user?.name || email.split('@')[0]
+      });
 
-      // Redirect to user profile or dashboard
-      navigate('/profile'); // Change as needed
+      // Redirect to profile
+      navigate('/profile');
     } catch (error: any) {
       alert(error.message || 'An error occurred during login.');
       console.error('Login error:', error);
