@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,18 +9,44 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login attempt:', { email, password });
+
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Login successful!');
+        // You can store token or user data in localStorage/sessionStorage
+        // localStorage.setItem('user', JSON.stringify(data.user));
+        navigate('/dashboard'); // Change to your route
+      } else {
+        alert(data.detail || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <div className="p-2 bg-blue-600 rounded-lg">
               <MessageSquare className="w-6 h-6 text-white" />
@@ -46,7 +71,6 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full"
               />
             </div>
 
@@ -60,7 +84,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pr-10"
+                  className="pr-10"
                 />
                 <button
                   type="button"
@@ -77,9 +101,9 @@ const Login = () => {
                 <input
                   id="remember"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
-                <Label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
+                <Label htmlFor="remember" className="ml-2 text-sm text-gray-900">
                   Remember me
                 </Label>
               </div>
@@ -88,8 +112,12 @@ const Login = () => {
               </Link>
             </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-              Sign In
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={loading}
+            >
+              {loading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
 

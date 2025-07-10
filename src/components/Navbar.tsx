@@ -52,7 +52,7 @@ const Navbar = () => {
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
               <Link to="/login">
-                <Button variant="ghost" className="text-gray-600 hover:text-blue-600">
+                <Button variant="ghost" className="bg-green-600 hover:bg-green-500 text-white">
                   Login
                 </Button>
               </Link>
